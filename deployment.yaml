@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-app
+  labels:
+    app: python
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: python
+  template:
+    metadata:
+      labels:
+        app: python
+    spec:
+      terminationGracePeriodSeconds: 120
+      containers:
+      - name: python
+        image: sigtermtest
+        imagePullPolicy: Never
+        lifecycle:
+          preStop:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - "while [ ! -f /tmp/READY_AT ];do sleep 1;echo 'Waiting for /tmp/READY_AT';done;"
